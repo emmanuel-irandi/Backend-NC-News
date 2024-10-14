@@ -1,7 +1,6 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
-
+Inorder to run this locally on your own decide, you will need to create two environment files, .env.test && .env.development
 
 
 --- 
