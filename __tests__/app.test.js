@@ -35,3 +35,19 @@ describe("GET /api", () => {
             });
     });
 });
+
+describe("GET article by id", ()=>{
+    test("",()=>{
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((responce) => {
+            /*
+            similarily to ticket 2, but modified for the specifics of the question,
+            we could do something along the lines of first of, expecting the length of the object to be 8 or more,
+            as we're working with 8 parameters, then we could just do 8 different expect toHaveProperty's for each one we was asked to include.
+            That overall should cover everything we're looking for?
+            */
+        })
+    })
+})
