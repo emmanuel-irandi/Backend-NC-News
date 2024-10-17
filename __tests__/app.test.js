@@ -36,13 +36,6 @@ describe("GET /api", () => {
     });
 });
 
-/*
-similarily to ticket 2, but modified for the specifics of the question,
-we could do something along the lines of first of, expecting the length of the object to be 8 or more,
-as we're working with 8 parameters, then we could just do 8 different expect toHaveProperty's for each one we was asked to include.
-That overall should cover everything we're looking for?
-*/
-
 describe("GET article by id", ()=>{
     test("",()=>{
         return request(app)
@@ -62,4 +55,27 @@ describe("GET article by id", ()=>{
             expect(article).toHaveProperty("article_img_url")
         })
     })
-})
+});
+
+describe("GET articles", ()=>{
+    test("",()=>{
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((responce) => {
+            expect(Array.isArray(responce.body.articles)).toBe(true);
+            responce.body.articles.forEach((article)=>{
+            expect(article).toHaveProperty("author")
+            expect(article).toHaveProperty("title")
+            expect(article).toHaveProperty("article_id")
+
+            expect(article).toHaveProperty("body")
+            expect(article).toHaveProperty("topic")
+
+            expect(article).toHaveProperty("created_at")
+            expect(article).toHaveProperty("votes")
+            expect(article).toHaveProperty("article_img_url")
+            })
+        })
+    })
+});
