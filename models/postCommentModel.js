@@ -6,7 +6,6 @@ const insertComment = (articleId,requestBody)=>{
         INSERT INTO comments(body, article_id, author) VALUES($1,$2,$3) RETURNING *
         `,[requestBody.body,articleId,requestBody.username])
         .then((result)=>{
-            console.log(result);
             return result.rows[0]
         })
 }

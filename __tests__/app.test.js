@@ -37,7 +37,7 @@ describe("GET /api", () => {
 });
 
 describe("GET article by id", ()=>{
-    test("",()=>{
+    test("Returns the article that was accessed by ID",()=>{
         return request(app)
         .get("/api/articles/1")
         .expect(200)
@@ -58,7 +58,7 @@ describe("GET article by id", ()=>{
 });
 
 describe("GET articles", ()=>{
-    test("",()=>{
+    test("Return all the available articles",()=>{
         return request(app)
         .get("/api/articles")
         .expect(200)
@@ -81,7 +81,7 @@ describe("GET articles", ()=>{
 });
 
 describe("GET comments", ()=>{
-    test("",()=>{
+    test("Return all of the comments on an article",()=>{
         return request(app)
         .get("/api/articles/1/comments")
         .expect(200)
@@ -111,3 +111,15 @@ describe("POST comments", ()=>{
         })
     })
 });
+
+describe("Patch votes",()=>{
+    test("Increment the votes on an article and return the article back.",()=>{
+        return request(app)
+        .patch("/api/articles/1")
+        .send({inc_votes : 10})
+        .expect(200)
+        .then((responce) => {
+            expect(responce.body.article.votes).toBe(110)
+        })
+    })
+})
