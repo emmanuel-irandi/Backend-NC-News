@@ -173,3 +173,26 @@ describe("GET articles sort queries", ()=>{
         })
     })
 });
+
+describe("GET articles by topic query", ()=>{
+    test("Return all the available articles filtered by topic",()=>{
+        return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((responce) => {
+            expect(Array.isArray(responce.body.articles)).toBe(true);
+            responce.body.articles.forEach((article)=>{
+            expect(article).toHaveProperty("author")
+            expect(article).toHaveProperty("title")
+            expect(article).toHaveProperty("article_id")
+
+            expect(article).toHaveProperty("body")
+            expect(article).toHaveProperty("topic")
+
+            expect(article).toHaveProperty("created_at")
+            expect(article).toHaveProperty("votes")
+            expect(article).toHaveProperty("article_img_url")
+            })
+        })
+    })
+});
