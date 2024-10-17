@@ -131,3 +131,22 @@ describe("DELETE comment",()=>{
         .expect(204)
     })
 })
+
+describe("GET users", ()=>{
+    test("Return all the available users",()=>{
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((responce) => {
+            expect(Array.isArray(responce.body.users)).toBe(true);
+            responce.body.users.forEach((user)=>{
+            expect(user).toHaveProperty("username")
+
+            expect(user).toHaveProperty("name")
+
+    
+            expect(user).toHaveProperty("avatar_url")
+            })
+        })
+    })
+});
