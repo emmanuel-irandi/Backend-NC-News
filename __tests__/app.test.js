@@ -123,3 +123,11 @@ describe("Patch votes",()=>{
         })
     })
 })
+
+describe("DELETE comment",()=>{
+    test("Deletes comment at endpoint and sends back 204.",()=>{
+        return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+    })
+})

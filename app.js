@@ -6,7 +6,8 @@ const getId = require('./controllers/controllerThree')
 const getArticles = require('./controllers/articlesController');
 const getComments = require('./controllers/commentController');
 const postComment = require('./controllers/postCommentController');
-const patchVote = require('./controllers/patchVoteController')
+const patchVote = require('./controllers/patchVoteController');
+const deleteComment = require('./controllers/deleteCommentController');
 
 app.use(express.json());
 
@@ -19,5 +20,7 @@ app.get("/api/articles/:article_id/comments",getComments);
 app.post("/api/articles/:article_id/comments",postComment);
 
 app.patch("/api/articles/:article_id", patchVote);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 module.exports = app;
