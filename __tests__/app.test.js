@@ -79,3 +79,23 @@ describe("GET articles", ()=>{
         })
     })
 });
+
+describe("GET comments", ()=>{
+    test("",()=>{
+        return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((responce) => {
+            expect(Array.isArray(responce.body.comments)).toBe(true);
+            responce.body.comments.forEach((comment)=>{
+            expect(comment).toHaveProperty("comment_id")
+            expect(comment).toHaveProperty("votes")
+            expect(comment).toHaveProperty("created_at")
+            expect(comment).toHaveProperty("body")
+            expect(comment).toHaveProperty("author")
+            expect(comment).toHaveProperty("article_id")
+            })
+        })
+    })
+});
+
