@@ -150,3 +150,26 @@ describe("GET users", ()=>{
         })
     })
 });
+
+describe("GET articles sort queries", ()=>{
+    test("Return all the available articles sorted",()=>{
+        return request(app)
+        .get("/api/articles?sort_by=votes&order=asc")
+        .expect(200)
+        .then((responce) => {
+            expect(Array.isArray(responce.body.articles)).toBe(true);
+            responce.body.articles.forEach((article)=>{
+            expect(article).toHaveProperty("author")
+            expect(article).toHaveProperty("title")
+            expect(article).toHaveProperty("article_id")
+
+            expect(article).toHaveProperty("body")
+            expect(article).toHaveProperty("topic")
+
+            expect(article).toHaveProperty("created_at")
+            expect(article).toHaveProperty("votes")
+            expect(article).toHaveProperty("article_img_url")
+            })
+        })
+    })
+});
