@@ -53,6 +53,8 @@ describe("GET article by id", ()=>{
             expect(article).toHaveProperty("created_at")
             expect(article).toHaveProperty("votes")
             expect(article).toHaveProperty("article_img_url")
+
+            expect(article).toHaveProperty("comment_count")
         })
     })
 });
