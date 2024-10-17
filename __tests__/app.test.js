@@ -99,3 +99,15 @@ describe("GET comments", ()=>{
     })
 });
 
+describe("POST comments", ()=>{
+    test("Returns status code of 201 - created. Responds with the posted commment.",()=>{
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({username : "lurker", body : "unsubing rn"})
+        .expect(201)
+        .then((responce) => {
+            expect(responce.body).toHaveProperty("username")
+            expect(responce.body).toHaveProperty("body")
+        })
+    })
+});
