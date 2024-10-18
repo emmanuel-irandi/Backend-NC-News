@@ -57,6 +57,14 @@ describe("GET article by id", ()=>{
             expect(article).toHaveProperty("comment_count")
         })
     })
+    test("Receive a 400 when trying to access an invalid ID",()=>{
+        return request(app)
+        .get("/api/articles/a")
+        .expect(400)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("invalid ID");
+        })
+    })
 });
 
 describe("GET articles", ()=>{
@@ -112,6 +120,15 @@ describe("POST comments", ()=>{
             expect(responce.body).toHaveProperty("body")
         })
     })
+    test("Returns status code 400 when passing in the wrong properties",()=>{
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({user : "lurker", comment : "unsubing rn"})
+        .expect(400)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("invalid properties")
+        })
+    })
 });
 
 describe("Patch votes",()=>{
@@ -124,6 +141,24 @@ describe("Patch votes",()=>{
             expect(responce.body.article.votes).toBe(110)
         })
     })
+    test("Returns status code 400 when passing in the wrong properties",()=>{
+        return request(app)
+        .patch("/api/articles/1")
+        .send({votes : 10})
+        .expect(400)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("invalid property")
+        })
+    })
+    test("Returns status code, 400 when passing in the wrong values",()=>{
+        return request(app)
+        .patch("/api/articles/1")
+        .send({inc_votes : "Childish Gambino"})
+        .expect(400)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("invalid value")
+        })
+    })
 })
 
 describe("DELETE comment",()=>{
@@ -131,6 +166,14 @@ describe("DELETE comment",()=>{
         return request(app)
         .delete("/api/comments/1")
         .expect(204)
+    })
+    test("Returns a 400 when passed an invalid ID number",()=>{
+        return request(app)
+        .delete("/api/comments/donald-glover")
+        .expect(400)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("invalid ID");
+        })
     })
 })
 
