@@ -9,6 +9,9 @@ const deleteComment = (req,res)=>{
     .then(()=>{
         res.status(204).send({});
     })
+    .catch((err)=>{
+        res.status(err.status).send({msg : err.msg})
+    })
 }
 
 module.exports = deleteComment;

@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const selectArticlesById = require("./modelThree")
 
 const selectComment = (articleId)=>{
     
@@ -8,7 +9,13 @@ const selectComment = (articleId)=>{
         ORDER BY created_at DESC
         `)
         .then((result)=>{
-            return result.rows
+            return selectArticlesById(articleId)
+            .then(()=>{
+                return result.rows 
+            })
+            .catch((err)=>{
+                return Promise.reject(err)
+            })
         })
 }
 
