@@ -7,8 +7,10 @@ const getId = (req,res)=>{
     }
     selectArticlesById(req.params.article_id)
     .then((articlesData)=>{
-
         res.status(200).send({article_id : articlesData});
+    })
+    .catch((err)=>{
+        res.status(err.status).send({msg : err.msg});
     })
 }
 

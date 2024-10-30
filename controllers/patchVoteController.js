@@ -13,6 +13,9 @@ const patchVote = (req,res)=>{
     .then((articleData)=>{
         res.status(200).send({article : articleData});
     })
+    .catch((err)=>{
+        res.status(err.status).send({msg : err.msg})
+    })
 }
 
 module.exports = patchVote;
