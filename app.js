@@ -9,8 +9,11 @@ const postComment = require('./controllers/postCommentController');
 const patchVote = require('./controllers/patchVoteController');
 const deleteComment = require('./controllers/deleteCommentController');
 const getUsers = require('./controllers/usersController');
+const {handleCustomErrors,handleServerErrors} = require('./errors/errorHandler');
 
 app.use(express.json());
+app.use(handleCustomErrors);
+app.use(handleServerErrors);
 
 app.get("/api/topics",getTopics)
 app.get("/api",getEndPoint)

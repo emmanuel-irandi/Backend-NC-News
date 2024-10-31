@@ -9,6 +9,12 @@ const updateVote = (articleId,inc_votes)=>{
         RETURNING *
         `)
         .then((result)=>{
+            if(result.rows.length === 0) {
+                return Promise.reject({
+                    status : 404,
+                    msg : `No article found with ID:${articleId}`
+                })
+            }
             return result.rows[0]
         })
 }

@@ -57,6 +57,22 @@ describe("GET article by id", ()=>{
             expect(article).toHaveProperty("comment_count")
         })
     })
+    test("Receive a 400 when trying to access an invalid ID",()=>{
+        return request(app)
+        .get("/api/articles/a")
+        .expect(400)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("invalid ID");
+        })
+    })
+    test ("Receive a 404 when trying to access an ID that doesn't exist",()=>{
+        return request(app)
+        .get("/api/articles/999")
+        .expect(404)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("No article found with ID:999");
+        })
+    })
 });
 
 describe("GET articles", ()=>{
@@ -99,6 +115,31 @@ describe("GET comments", ()=>{
             })
         })
     })
+    test("Receive a 200 when trying to get comments on an article with no comments",()=>{
+        return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then((responce) => {
+            expect(Array.isArray(responce.body.comments)).toBe(true);
+            expect(responce.body.comments.length).toBe(0)
+        })
+    })
+    test("Receive a 400 when given an invalid ID",()=>{
+        return request(app)
+        .get("/api/articles/a/comments")
+        .expect(400)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("invalid ID");
+        })
+    })
+    test ("Receive a 404 when trying to get an ID that doesn't exist",()=>{
+        return request(app)
+        .get("/api/articles/999/comments")
+        .expect(404)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("No article found with ID:999");
+        })
+    })
 });
 
 describe("POST comments", ()=>{
@@ -110,6 +151,52 @@ describe("POST comments", ()=>{
         .then((responce) => {
             expect(responce.body).toHaveProperty("username")
             expect(responce.body).toHaveProperty("body")
+        })
+    })
+    test("Returns status code 400 when passing in the wrong properties",()=>{
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({user : "lurker", comment : "unsubing rn"})
+        .expect(400)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("invalid properties")
+        })
+    })
+    test("Receive 201 when passed unnecessary properties",()=>{
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({username : "lurker", body : "unsubing rn" , uneededString : "Jason"})
+        .expect(201)
+        .then((responce) => {
+            expect(responce.body).toHaveProperty("username")
+            expect(responce.body).toHaveProperty("body")
+        })
+    })
+    test("Receive a 400 when paassed an invalid article ID",()=>{
+        return request(app)
+        .post("/api/articles/a/comments")
+        .send({username : "lurker", body : "unsubing rn"})
+        .expect(400)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("invalid ID");
+        })
+    })
+    test("Receive a 404 when passed a non existent article ID",()=>{
+        return request(app)
+        .post("/api/articles/999/comments")
+        .send({username : "lurker", body : "unsubing rn"})
+        .expect(404)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("No article found with ID:999");
+        })
+    })
+    test("Receive a 404 when passed a non existent username",()=>{
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({username : "goku", body : "unsubing rn"})
+        .expect(404)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("No username found:goku");
         })
     })
 });
@@ -124,6 +211,33 @@ describe("Patch votes",()=>{
             expect(responce.body.article.votes).toBe(110)
         })
     })
+    test("Returns status code 400 when passing in the wrong properties",()=>{
+        return request(app)
+        .patch("/api/articles/1")
+        .send({votes : 10})
+        .expect(400)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("invalid property")
+        })
+    })
+    test("Returns status code, 400 when passing in the wrong values",()=>{
+        return request(app)
+        .patch("/api/articles/1")
+        .send({inc_votes : "Childish Gambino"})
+        .expect(400)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("invalid value")
+        })
+    })
+    test ("Receive a 404 when trying to patch an article that doesn't exist",()=>{
+        return request(app)
+        .patch("/api/articles/999")
+        .send({inc_votes : 10})
+        .expect(404)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("No article found with ID:999");
+        })
+    })
 })
 
 describe("DELETE comment",()=>{
@@ -132,6 +246,23 @@ describe("DELETE comment",()=>{
         .delete("/api/comments/1")
         .expect(204)
     })
+    test("Returns a 400 when passed an invalid ID number",()=>{
+        return request(app)
+        .delete("/api/comments/donald-glover")
+        .expect(400)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("invalid ID");
+        })
+    })
+    test ("Receive a 404 when trying to delete a comment that doesn't exist",()=>{
+        return request(app)
+        .delete("/api/comments/999")
+        .expect(404)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("No comment found with ID:999");
+        })
+    })
+
 })
 
 describe("GET users", ()=>{
@@ -156,7 +287,7 @@ describe("GET users", ()=>{
 describe("GET articles sort queries", ()=>{
     test("Return all the available articles sorted",()=>{
         return request(app)
-        .get("/api/articles?sort_by=votes&order=asc")
+        .get("/api/articles?sort_by=votes&order=ASC")
         .expect(200)
         .then((responce) => {
             expect(Array.isArray(responce.body.articles)).toBe(true);
@@ -172,6 +303,22 @@ describe("GET articles sort queries", ()=>{
             expect(article).toHaveProperty("votes")
             expect(article).toHaveProperty("article_img_url")
             })
+        })
+    })
+    test("Recieve a 400 when given an invalid sort_by query",()=>{
+        return request(app)
+        .get("/api/articles?sort_by=boats&order=asc")
+        .expect(400)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("invalid sort_by/order");
+        })
+    })
+    test("Recieve a 400 when given an invalid order query",()=>{
+        return request(app)
+        .get("/api/articles?sort_by=votes&order=zsc")
+        .expect(400)
+        .then((responce)=>{
+            expect(responce.body.msg).toBe("invalid sort_by/order");
         })
     })
 });
@@ -195,6 +342,23 @@ describe("GET articles by topic query", ()=>{
             expect(article).toHaveProperty("votes")
             expect(article).toHaveProperty("article_img_url")
             })
+        })
+    })
+    test ("Receive a 200 and an empty array, when given a valid topic query with no articles",()=>{
+        return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then((responce) => {
+            expect(Array.isArray(responce.body.articles)).toBe(true);
+            expect(responce.body.articles.length).toBe(0)
+        })
+    })
+    test ("Receive a 404 when given a non existant topic query ",()=>{
+        return request(app)
+        .get("/api/articles?topic=goku")
+        .expect(404)
+        .then((responce) => {
+            expect(responce.body.msg).toBe("No topic found:goku")
         })
     })
 });
