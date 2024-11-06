@@ -81,7 +81,7 @@ describe("GET articles", ()=>{
         .get("/api/articles")
         .expect(200)
         .then((responce) => {
-            expect(Array.isArray(responce.body.articles)).toBe(true);
+            expect(responce.body.articles.length).toBe(13);
             responce.body.articles.forEach((article)=>{
             expect(article).toHaveProperty("author")
             expect(article).toHaveProperty("title")

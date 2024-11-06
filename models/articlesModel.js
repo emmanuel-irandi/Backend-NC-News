@@ -9,13 +9,15 @@ const selectArticles = (sort_by = "created_at", order = "DESC", topic = 'topic')
             msg: `invalid sort_by/order`
         })
     }
+    let queryString = 'SELECT * FROM articles ';
+            if (topic != "topic"){
+                queryString += `WHERE topic = '${topic}' `
+            }
+            queryString += `ORDER BY ${sort_by} ${order}`
+
     return selectTopicsBySlug(topic)
         .then(() => {
-            return db.query(`
-            SELECT * FROM articles
-            WHERE topic = '${topic}'
-            ORDER BY ${sort_by} ${order}
-            `)
+            return db.query(queryString)
                 .then((result) => {
                     return result.rows
                 })
